@@ -48,7 +48,7 @@ public class UserController {
 	@PutMapping
 	public ResponseEntity<Boolean> updateUser(@RequestBody User user) {
 		if (userService.updateUser(user)) {
-			return new ResponseEntity<Boolean>(true, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 		}
 		return new ResponseEntity<Boolean>(false, HttpStatus.BAD_REQUEST);
 	}
@@ -56,7 +56,7 @@ public class UserController {
 	@DeleteMapping("/{email}")
 	public ResponseEntity<Boolean> deleteUser(@PathVariable @Valid @Email String email) {
 		if (userService.deleteUser(email)) {
-			return new ResponseEntity<Boolean>(true, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 		}
 		return new ResponseEntity<Boolean>(false, HttpStatus.BAD_REQUEST);
 	}

@@ -6,15 +6,21 @@ spring:
       ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-  datasource:
-    dbcp2:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${springDatasourceURL}
-    username: ${springDatasourceUsername}
-    password: ${springDatasourcePassword}
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
   sql:
     init:
       platform: h2
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: ${h2DatasourceURL}
+    username: ${springDatasourceUsername}
+    password: ${springDatasourcePassword}
+    driver-class-name: org.h2.Driver
+      
+      
 logging:
   level:
     com:

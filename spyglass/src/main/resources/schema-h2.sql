@@ -1,3 +1,11 @@
+  CREATE TABLE users (
+  email VARCHAR(255) NOT NULL,
+  first_name VARCHAR(255) NULL,
+  last_name VARCHAR(255) NULL,
+  date_of_birth DATE NULL,
+  password VARCHAR(255) NOT NULL,
+  PRIMARY KEY (email));
+
 CREATE TABLE goals (
   id INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
@@ -10,10 +18,3 @@ CREATE TABLE goals (
   FOREIGN KEY (user_id) REFERENCES users(email),
   PRIMARY KEY (id));
   
-  CREATE TABLE users (
-  email VARCHAR(255) NOT NULL,
-  first_name VARCHAR(255) NULL,
-  last_name VARCHAR(255) NULL,
-  date_of_birth DATE NULL,
-  password VARCHAR(255) NOT NULL,
-  PRIMARY KEY (email));

@@ -3,17 +3,17 @@ package com.skillstorm.spyglass.services;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skillstorm.spyglass.exceptions.GoalNotFoundException;
 import com.skillstorm.spyglass.models.Goal;
 import com.skillstorm.spyglass.repositories.GoalRepository;
 
 @Service
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 public class GoalServiceImplementation implements GoalService {
 
 	@Autowired
@@ -21,7 +21,11 @@ public class GoalServiceImplementation implements GoalService {
 	
 	@Override
 	public List<Goal> findByUser(String email) {
-		return goalRepository.findByUserId(email);
+		List<Goal> goals = goalRepository.findByUserId(email);
+		if (!goals.isEmpty()) {
+			return goals;
+		}
+		throw new GoalNotFoundException("No goals exist for the provided user.");
 	}
 
 	@Override
@@ -30,7 +34,7 @@ public class GoalServiceImplementation implements GoalService {
 		if (goal.isPresent()) {//Goal exists.
 			return goal.get();
 		}
-		return null;//Goal does not exist.
+		throw new GoalNotFoundException("No goal exists for the provided id.");//Goal does not exist.
 	}
 
 	@Override
@@ -38,13 +42,18 @@ public class GoalServiceImplementation implements GoalService {
 		return goalRepository.save(goal);
 	}
 
+	//Cannot change goal id.
 	@Override
 	public boolean updateGoal(Goal goal) {
-		int result = goalRepository.updateGoal(goal.getId(),goal.getName(),goal.getDescription(),goal.getImageSrc(),goal.getTargetDate(),goal.getTargetAmount(),goal.getCurrentAmount(),goal.getUser().getEmail());
-		if (result > 0) {//Changed row --> Update successful
-			return true;
+		try {
+			int result = goalRepository.updateGoal(goal.getId(),goal.getName(),goal.getDescription(),goal.getImageSrc(),goal.getTargetDate(),goal.getTargetAmount(),goal.getCurrentAmount(),goal.getUser().getEmail());
+			if (result > 0) {//Changed row --> Update successful
+				return true;
+			}
+			return false;
+		} catch (Exception e) {//Can occur when entering a user email that doesn't exist.
+			return false;
 		}
-		return false;
 	}
 
 	@Override

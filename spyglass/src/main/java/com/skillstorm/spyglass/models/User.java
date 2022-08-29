@@ -16,6 +16,8 @@ import javax.validation.constraints.NotEmpty;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="users")
 @Validated
@@ -45,10 +47,15 @@ public class User {
 	
 	//=================ENTITY MAPPINGS=========================
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="user") //Goal class' user variable
 	private Set<Goal> goals;
 	
 	//=========================================================
+	
+	public User() {
+		super();
+	}
 	
 	public User(@Valid @Email String email, String firstName, String lastName, LocalDate dateOfBirth,
 			@Valid @NotBlank @NotEmpty String password) {

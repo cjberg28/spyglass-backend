@@ -62,7 +62,6 @@ public class Goal {
 	private float currentAmount;
 	
 	@Valid
-	@NotNull
 	@Email
 	@Column(name="user_id", insertable=false, updatable=false)
 	private String userId;
@@ -74,6 +73,10 @@ public class Goal {
 	private User user;
 	
 	//====================================================================
+	
+	public Goal() {
+		super();
+	}
 	
 	public Goal(@Valid int id, @Valid @NotBlank @NotEmpty String name, String description, String imageSrc,
 			@Valid @NotNull @Future LocalDate targetDate, @Valid @NotNull @DecimalMin("0") float targetAmount,

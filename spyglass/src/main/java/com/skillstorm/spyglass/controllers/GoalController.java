@@ -40,7 +40,7 @@ public class GoalController {
 		return ResponseEntity.ok(goals);
 	}
 
-	@GetMapping("/{email}")
+	@GetMapping("/user/{email}")
 	public ResponseEntity<List<Goal>> findByUser(@PathVariable @Valid @Email String email) {
 		logger.trace("findByUser(" + email + ") called in GoalController.java");
 		
@@ -64,7 +64,7 @@ public class GoalController {
 	@PutMapping
 	public ResponseEntity<Boolean> updateGoal(@RequestBody Goal goal) {
 		if (goalService.updateGoal(goal)) {
-			return new ResponseEntity<Boolean>(true, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 		}
 		return new ResponseEntity<Boolean>(false, HttpStatus.BAD_REQUEST);
 	}
@@ -72,7 +72,7 @@ public class GoalController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Boolean> deleteGoal(@PathVariable int id) {
 		if (goalService.deleteGoal(id)) {
-			return new ResponseEntity<Boolean>(true, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 		}
 		return new ResponseEntity<Boolean>(false, HttpStatus.BAD_REQUEST);
 	}

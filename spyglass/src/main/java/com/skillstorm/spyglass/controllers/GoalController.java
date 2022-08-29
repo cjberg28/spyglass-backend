@@ -40,8 +40,8 @@ public class GoalController {
 		return ResponseEntity.ok(goals);
 	}
 
-	@GetMapping
-	public ResponseEntity<List<Goal>> findByUser(@RequestParam(name="user") @Valid @Email String email) {
+	@GetMapping("/{email}")
+	public ResponseEntity<List<Goal>> findByUser(@PathVariable @Valid @Email String email) {
 		logger.trace("findByUser(" + email + ") called in GoalController.java");
 		
 		List<Goal> goals = goalService.findByUser(email);

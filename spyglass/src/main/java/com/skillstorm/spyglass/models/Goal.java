@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -59,6 +60,12 @@ public class Goal {
 	@DecimalMin("0")
 	@Column(name="current_amount")
 	private float currentAmount;
+	
+	@Valid
+	@NotNull
+	@Email
+	@Column(name="user_id", insertable=false, updatable=false)
+	private String userId;
 	
 	//===================MAPPING FIELDS===================================
 	

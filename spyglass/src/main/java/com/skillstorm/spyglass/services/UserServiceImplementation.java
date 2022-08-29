@@ -3,15 +3,19 @@ package com.skillstorm.spyglass.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.skillstorm.spyglass.exceptions.UserNotFoundException;
 import com.skillstorm.spyglass.models.User;
 import com.skillstorm.spyglass.repositories.UserRepository;
 
+@Service
+@Transactional
 public class UserServiceImplementation implements UserService {
 	
 	@Autowired

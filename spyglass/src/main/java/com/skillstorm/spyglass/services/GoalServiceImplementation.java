@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skillstorm.spyglass.exceptions.GoalNotFoundException;
 import com.skillstorm.spyglass.models.Goal;
 import com.skillstorm.spyglass.repositories.GoalRepository;
 
@@ -19,7 +20,7 @@ public class GoalServiceImplementation implements GoalService {
 	private GoalRepository goalRepository;
 	
 	@Override
-	public List<Goal> findAllGoals(String email) {
+	public List<Goal> findByUser(String email) {
 		return goalRepository.findByUserId(email);
 	}
 
@@ -53,6 +54,15 @@ public class GoalServiceImplementation implements GoalService {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public List<Goal> findAllGoals() {
+		List<Goal> goals = (List<Goal>) goalRepository.findAll();
+		if (!goals.isEmpty()) {
+			return goals;
+		}
+		throw new GoalNotFoundException("No goals currently exist in the database.");
 	}
 
 }

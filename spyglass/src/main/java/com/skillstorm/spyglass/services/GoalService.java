@@ -5,7 +5,7 @@ import java.util.List;
 import com.skillstorm.spyglass.models.Goal;
 
 public interface GoalService {
-	public List<Goal> findAllGoals(String email);
+	public List<Goal> findByUser(String email);
 
 	public Goal findById(int id);
 
@@ -14,4 +14,6 @@ public interface GoalService {
 	public boolean updateGoal(Goal goal);
 
 	public boolean deleteGoal(int id);
+
+	public List<Goal> findAllGoals();
 }

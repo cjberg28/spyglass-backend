@@ -31,12 +31,20 @@ public class GoalController {
 	
 	@Autowired
 	private GoalService goalService;
+	
+	@GetMapping
+	public ResponseEntity<List<Goal>> findAllGoals() {
+		logger.trace("findAllGoals() called in GoalController.java");
+		
+		List<Goal> goals = goalService.findAllGoals();
+		return ResponseEntity.ok(goals);
+	}
 
 	@GetMapping
-	public ResponseEntity<List<Goal>> findAllGoals(@RequestParam(name="user") @Valid @Email String email) {
-		logger.trace("findAllGoals(" + email + ") called in GoalController.java");
+	public ResponseEntity<List<Goal>> findByUser(@RequestParam(name="user") @Valid @Email String email) {
+		logger.trace("findByUser(" + email + ") called in GoalController.java");
 		
-		List<Goal> goals = goalService.findAllGoals(email);
+		List<Goal> goals = goalService.findByUser(email);
 		return ResponseEntity.ok(goals);
 	}
 	

@@ -41,7 +41,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			http.csrf().disable().authorizeRequests().anyRequest().authenticated().and()
 				.httpBasic().authenticationEntryPoint(entryPoint);
 			http.logout().clearAuthentication(true);
-//			http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -50,8 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		super.configure(auth);
-		auth.inMemoryAuthentication().withUser(username).password(password).roles("USER", "ADMIN");
-//		auth.jdbcAuthentication().dataSource(datasource).passwordEncoder(encoder);
+//		auth.inMemoryAuthentication().withUser(username).password(password).roles("USER", "ADMIN");
+		auth.jdbcAuthentication().dataSource(datasource).passwordEncoder(encoder);
 	}
 }

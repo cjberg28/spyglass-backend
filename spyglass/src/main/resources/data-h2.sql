@@ -1,7 +1,19 @@
-insert into users(email, first_name, last_name, date_of_birth, password) values('cberg@skillstorm.com', 'Cameron', 'Berg', '2000-01-28', 'hello');
-insert into users(email, first_name, last_name, date_of_birth, password) values('therock@google.com', 'Dwayne', 'Johnson', '1972-05-02', 'rock');
-insert into users(email, first_name, last_name, date_of_birth, password) values('jstatham@ymail.com', 'Jason', 'Statham', '1967-07-26', 'england');
-insert into users(email, first_name, last_name, date_of_birth, password) values('jchan@aol.com', 'Jackie', 'Chan', '1954-04-07', 'action');
+insert into users(username, password, enabled) values('cberg@skillstorm.com','$2a$10$EIKyduMqlpJ/Njiqy1Isa.imNySLWrqTw/eVNHltjQz6E01utIqim',true);
+insert into users(username, password, enabled) values('therock@google.com','$2a$10$1VTB2Ac4EjvPWNtIbw/AuOBj4wZDDzY9WNEVCOZxfnrKjjVsfbhtC',true);
+insert into users(username, password, enabled) values('jstatham@ymail.com','$2a$10$ncWMHnYyL8eQyZVvvcNk9eX7kKk/5DlzLfyuFEvMrSb0UZHXuM1Qa',true);
+insert into users(username, password, enabled) values('jchan@aol.com','$2a$10$uqh10iPkFODdj/YwLKrqPO6S/JIEsfY9rlwpeuUZ66xO2wVXpBFMG',true);
+
+insert into authorities(username, authority) values('cberg@skillstorm.com', 'ADMIN');
+insert into authorities(username, authority) values('cberg@skillstorm.com', 'USER');
+insert into authorities(username, authority) values('therock@google.com', 'USER');
+insert into authorities(username, authority) values('jstatham@ymail.com', 'USER');
+insert into authorities(username, authority) values('jchan@aol.com', 'USER');
+
+
+insert into application_user(email, first_name, last_name, date_of_birth, password) values('cberg@skillstorm.com', 'Cameron', 'Berg', '2000-01-28', 'hello');
+insert into application_user(email, first_name, last_name, date_of_birth, password) values('therock@google.com', 'Dwayne', 'Johnson', '1972-05-02', 'rock');
+insert into application_user(email, first_name, last_name, date_of_birth, password) values('jstatham@ymail.com', 'Jason', 'Statham', '1967-07-26', 'england');
+insert into application_user(email, first_name, last_name, date_of_birth, password) values('jchan@aol.com', 'Jackie', 'Chan', '1954-04-07', 'action');
 
 insert into goals (name, description, image_src, target_date, target_amount, current_amount, user_id) values ('You''re a Good Man, Charlie Brown', 'Centralized web-enabled forecast', 'http://dummyimage.com/105x100.png/dddddd/000000', '2023-03-14', 61595.54, 5276.32, 'cberg@skillstorm.com');
 insert into goals (name, description, image_src, target_date, target_amount, current_amount, user_id) values ('River Murders, The', 'Balanced 24/7 moratorium', 'http://dummyimage.com/189x100.png/cc0000/ffffff', '2023-01-18', 79426.37, 6931.77, 'cberg@skillstorm.com');

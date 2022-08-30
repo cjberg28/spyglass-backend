@@ -19,7 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="users")
+@Table(name="application_user")
 @Validated
 public class User {
 	

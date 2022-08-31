@@ -24,7 +24,6 @@ import com.skillstorm.spyglass.models.Goal;
 import com.skillstorm.spyglass.services.GoalService;
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/goals")
 public class GoalController {
 	

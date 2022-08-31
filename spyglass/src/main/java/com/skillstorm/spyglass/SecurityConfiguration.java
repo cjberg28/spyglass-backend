@@ -12,15 +12,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
-	@Value("${authUsername}")
-	private String username;
+//	@Value("${authUsername}")
+//	private String username;
 	
-	@Value("${authPassword}")
-	private String password;
+//	@Value("${authPassword}")
+//	private String password;
 
 	@Autowired
 	private DataSource datasource;
@@ -32,7 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private AuthenticationEntryPointImplementation entryPoint;
 	
 //	@Autowired
-//	private CorsConfigurationSource corsConfigSource;
+//	private CORSFilter corsFilter;
 	
 	@Override
 	protected void configure(HttpSecurity http) {
@@ -41,6 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			http.csrf().disable().authorizeRequests().anyRequest().authenticated().and()
 				.httpBasic().authenticationEntryPoint(entryPoint);
 			http.logout().clearAuthentication(true);
+			http.cors();//This is required to pick up the corsConfigurer bean.
 			
 		} catch (Exception e) {
 			e.printStackTrace();

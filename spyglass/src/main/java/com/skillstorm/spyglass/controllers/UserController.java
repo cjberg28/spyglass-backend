@@ -22,7 +22,6 @@ import com.skillstorm.spyglass.models.User;
 import com.skillstorm.spyglass.services.UserService;
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/users")
 public class UserController {
 	

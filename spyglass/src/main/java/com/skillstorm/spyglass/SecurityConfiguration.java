@@ -16,12 +16,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-	
-//	@Value("${authUsername}")
-//	private String username;
-	
-//	@Value("${authPassword}")
-//	private String password;
+	//See the following link for more info on how to set up basic authentication:
+	//https://www.devglan.com/spring-security/spring-boot-security-rest-basic-authentication
 
 	@Autowired
 	private DataSource datasource;
@@ -31,9 +27,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private AuthenticationEntryPointImplementation entryPoint;
-	
-//	@Autowired
-//	private CORSFilter corsFilter;
 	
 	@Override
 	protected void configure(HttpSecurity http) {
@@ -51,7 +44,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//		auth.inMemoryAuthentication().withUser(username).password(password).roles("USER", "ADMIN");
 		auth.jdbcAuthentication().dataSource(datasource).passwordEncoder(encoder);
 	}
 }

@@ -5,7 +5,6 @@
   first_name VARCHAR(255) NULL,
   last_name VARCHAR(255) NULL,
   date_of_birth DATE NULL,
-  password VARCHAR(255) NOT NULL,
   PRIMARY KEY (email));
 
 CREATE TABLE goals (

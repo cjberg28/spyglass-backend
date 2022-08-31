@@ -16,8 +16,8 @@ import com.skillstorm.spyglass.models.User;
 public interface UserRepository extends CrudRepository<User,String> {
 
 	@Modifying
-	@Query("update User u set u.firstName = ?2, u.lastName = ?3, u.dateOfBirth = ?4, u.password = ?5 where u.email = ?1")
-	int updateUser(String email, String firstName, String lastName, LocalDate dateOfBirth, String password);
+	@Query("update User u set u.firstName = ?2, u.lastName = ?3, u.dateOfBirth = ?4 where u.email = ?1")
+	int updateUser(String email, String firstName, String lastName, LocalDate dateOfBirth);
 
 	@Modifying
 	@Query("delete User u where u.email = ?1")

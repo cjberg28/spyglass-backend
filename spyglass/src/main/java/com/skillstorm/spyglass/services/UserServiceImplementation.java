@@ -46,7 +46,7 @@ public class UserServiceImplementation implements UserService {
 
 	@Override
 	public boolean updateUser(User user) {
-		int result = userRepository.updateUser(user.getEmail(),user.getFirstName(),user.getLastName(),user.getDateOfBirth(),user.getPassword());
+		int result = userRepository.updateUser(user.getEmail(),user.getFirstName(),user.getLastName(),user.getDateOfBirth());
 		if (result > 0) {
 			return true;
 		}

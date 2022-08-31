@@ -10,10 +10,10 @@ insert into authorities(username, authority) values('jstatham@ymail.com', 'USER'
 insert into authorities(username, authority) values('jchan@aol.com', 'USER');
 
 
-insert into application_user(email, first_name, last_name, date_of_birth, password) values('cberg@skillstorm.com', 'Cameron', 'Berg', '2000-01-28', 'hello');
-insert into application_user(email, first_name, last_name, date_of_birth, password) values('therock@google.com', 'Dwayne', 'Johnson', '1972-05-02', 'rock');
-insert into application_user(email, first_name, last_name, date_of_birth, password) values('jstatham@ymail.com', 'Jason', 'Statham', '1967-07-26', 'england');
-insert into application_user(email, first_name, last_name, date_of_birth, password) values('jchan@aol.com', 'Jackie', 'Chan', '1954-04-07', 'action');
+insert into application_user(email, first_name, last_name, date_of_birth) values('cberg@skillstorm.com', 'Cameron', 'Berg', '2000-01-28');
+insert into application_user(email, first_name, last_name, date_of_birth) values('therock@google.com', 'Dwayne', 'Johnson', '1972-05-02');
+insert into application_user(email, first_name, last_name, date_of_birth) values('jstatham@ymail.com', 'Jason', 'Statham', '1967-07-26');
+insert into application_user(email, first_name, last_name, date_of_birth) values('jchan@aol.com', 'Jackie', 'Chan', '1954-04-07');
 
 insert into goals (name, description, image_src, target_date, target_amount, current_amount, user_id) values ('You''re a Good Man, Charlie Brown', 'Centralized web-enabled forecast', 'http://dummyimage.com/105x100.png/dddddd/000000', '2023-03-14', 61595.54, 5276.32, 'cberg@skillstorm.com');
 insert into goals (name, description, image_src, target_date, target_amount, current_amount, user_id) values ('River Murders, The', 'Balanced 24/7 moratorium', 'http://dummyimage.com/189x100.png/cc0000/ffffff', '2023-01-18', 79426.37, 6931.77, 'cberg@skillstorm.com');

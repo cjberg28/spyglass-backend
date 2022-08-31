@@ -39,12 +39,6 @@ public class User {
 	@Column(name="date_of_birth")
 	private LocalDate dateOfBirth;
 	
-	@Valid
-	@NotBlank
-	@NotEmpty
-	@Column(name="password")
-	private String password;
-	
 	//=================ENTITY MAPPINGS=========================
 	
 	@JsonIgnore
@@ -57,14 +51,12 @@ public class User {
 		super();
 	}
 	
-	public User(@Valid @Email String email, String firstName, String lastName, LocalDate dateOfBirth,
-			@Valid @NotBlank @NotEmpty String password) {
+	public User(@Valid @Email String email, String firstName, String lastName, LocalDate dateOfBirth) {
 		super();
 		this.email = email;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dateOfBirth = dateOfBirth;
-		this.password = password;
 	}
 
 	public String getEmail() {
@@ -99,14 +91,6 @@ public class User {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	public Set<Goal> getGoals() {
 		return goals;
 	}
@@ -118,7 +102,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [email=" + email + ", firstName=" + firstName + ", lastName=" + lastName + ", dateOfBirth="
-				+ dateOfBirth + ", password=" + password + "]";
+				+ dateOfBirth + "]";
 	}
 	
 	

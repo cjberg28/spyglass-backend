@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -142,6 +143,65 @@ public class UserControllerTest {
 			   .andExpect(status().isUnauthorized());
 		
 		verify(userService, times(0)).createUser(any());
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("updateUser() - Valid Credentials, User Found") //Service method returns true
+	public void testUpdateUserWithValidCredentialsAndUserFound() throws Exception {
+		User newUser = new User("tester1@skillstorm.com","Tester","One",LocalDate.of(2000, 1, 28));
+		
+		Mockito.when(userService.updateUser(any())).thenReturn(true);
+		
+		mockMvc.perform(put("/users").content(mapper.writeValueAsString(newUser)).contentType("application/json"))
+			   .andExpect(status().isOk())
+			   .andExpect(content().string(mapper.writeValueAsString(true)));
+		
+		verify(userService, times(1)).updateUser(any());
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("updateUser() - Valid Credentials, User Not Found") //Service method returns true
+	public void testUpdateUserWithValidCredentialsAndUserNotFound() throws Exception {
+		User newUser = new User("tester1@skillstorm.com","Tester","One",LocalDate.of(2000, 1, 28));
+		
+		//Returning false from the service method triggers the controller method to give a bad request status code.
+		Mockito.when(userService.updateUser(any())).thenReturn(false);
+		
+		mockMvc.perform(put("/users").content(mapper.writeValueAsString(newUser)).contentType("application/json"))
+			   .andExpect(status().isBadRequest())
+			   .andExpect(content().string(mapper.writeValueAsString(false)));
+		
+		verify(userService, times(1)).updateUser(any());
+	}
+	
+	@Test
+	@DisplayName("updateUser() - Invalid Credentials, User Found") //Service method returns true
+	public void testUpdateUserWithInvalidCredentialsAndUserFound() throws Exception {
+		User newUser = new User("tester1@skillstorm.com","Tester","One",LocalDate.of(2000, 1, 28));
+		
+		Mockito.when(userService.updateUser(any())).thenReturn(true);
+		
+		mockMvc.perform(put("/users").content(mapper.writeValueAsString(newUser)).contentType("application/json")
+			   .with(SecurityMockMvcRequestPostProcessors.httpBasic(username, "nice")))
+			   .andExpect(status().isUnauthorized());
+		
+		verify(userService, times(0)).updateUser(any());
+	}
+	
+	@Test
+	@DisplayName("updateUser() - Invalid Credentials, User Not Found") //Service method returns true
+	public void testUpdateUserWithInvalidCredentialsAndUserNotFound() throws Exception {
+		User newUser = new User("tester1@skillstorm.com","Tester","One",LocalDate.of(2000, 1, 28));
+		
+		Mockito.when(userService.updateUser(any())).thenReturn(false);
+		
+		mockMvc.perform(put("/users").content(mapper.writeValueAsString(newUser)).contentType("application/json")
+			   .with(SecurityMockMvcRequestPostProcessors.httpBasic(username, "nice")))
+			   .andExpect(status().isUnauthorized());
+		
+		verify(userService, times(0)).updateUser(any());
 	}
 	
 }

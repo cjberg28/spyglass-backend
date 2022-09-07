@@ -1,7 +1,10 @@
 package com.skillstorm.spyglass.controllers;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -22,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skillstorm.spyglass.models.User;
 import com.skillstorm.spyglass.services.UserServiceImplementation;
@@ -75,8 +79,69 @@ public class UserControllerTest {
 	@Test
 	@DisplayName("findAllUsers() - Invalid Credentials")
 	public void testFindAllUsersWithInvalidCredentials() throws Exception {
+		List<User> mockUsers = new LinkedList<User>();
+		mockUsers.add(new User("tester1@skillstorm.com","Tester","One",LocalDate.of(2000, 1, 28)));
+		mockUsers.add(new User("tester2@skillstorm.com","Tester","Two",LocalDate.of(2000, 1, 1)));
+		Mockito.when(userService.findAllUsers()).thenReturn(mockUsers);
+		
 		mockMvc.perform(MockMvcRequestBuilders.get("/users").with(SecurityMockMvcRequestPostProcessors.httpBasic(username, "nice")))
 			   .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+		verify(userService, times(0)).findAllUsers();
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("findByEmail() - Valid Credentials")
+	public void testFindByEmailWithValidCredentials() throws Exception {
+		User mockUser = new User("tester1@skillstorm.com","Tester","One",LocalDate.of(2000, 1, 28));
+		
+		Mockito.when(userService.findByEmail(any())).thenReturn(mockUser);
+		
+		mockMvc.perform(get("/users/tester1@skillstorm.com"))
+			   .andExpect(status().isOk())
+			   .andExpect(content().string(mapper.writeValueAsString(mockUser)));
+		verify(userService, times(1)).findByEmail(any());
+	}
+	
+	@Test
+	@DisplayName("findByEmail() - Invalid Credentials")
+	public void testFindByEmailWithInvalidCredentials() throws Exception {
+		User mockUser = new User("tester1@skillstorm.com","Tester","One",LocalDate.of(2000, 1, 28));
+		
+		Mockito.when(userService.findByEmail(any())).thenReturn(mockUser);
+		
+		mockMvc.perform(MockMvcRequestBuilders.get("/users/tester1@skillstorm.com").with(SecurityMockMvcRequestPostProcessors.httpBasic(username, "nice")))
+			   .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+		verify(userService, times(0)).findByEmail(any());
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("createUser() - Valid Credentials")
+	public void testCreateUserWithValidCredentials() throws Exception {
+		User newUser = new User("tester1@skillstorm.com","Tester","One",LocalDate.of(2000, 1, 28));
+		
+		Mockito.when(userService.createUser(any())).thenReturn(newUser);
+		
+		mockMvc.perform(post("/users").content(mapper.writeValueAsString(newUser)).contentType("application/json"))
+			   .andExpect(status().isCreated())
+			   .andExpect(content().string(mapper.writeValueAsString(newUser)));
+		
+		verify(userService, times(1)).createUser(any());
+	}
+	
+	@Test
+	@DisplayName("createUser() - Invalid Credentials")
+	public void testCreateUserWithInvalidCredentials() throws Exception {
+		User newUser = new User("tester1@skillstorm.com","Tester","One",LocalDate.of(2000, 1, 28));
+		
+		Mockito.when(userService.createUser(any())).thenReturn(newUser);
+		
+		mockMvc.perform(post("/users").content(mapper.writeValueAsString(newUser)).contentType("application/json")
+			   .with(SecurityMockMvcRequestPostProcessors.httpBasic(username, "nice")))
+			   .andExpect(status().isUnauthorized());
+		
+		verify(userService, times(0)).createUser(any());
 	}
 	
 }

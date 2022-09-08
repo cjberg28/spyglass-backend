@@ -3,6 +3,7 @@ package com.skillstorm.spyglass.controllers;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -162,7 +163,7 @@ public class UserControllerTest {
 	
 	@Test
 	@WithMockUser
-	@DisplayName("updateUser() - Valid Credentials, User Not Found") //Service method returns true
+	@DisplayName("updateUser() - Valid Credentials, User Not Found") //Service method returns false
 	public void testUpdateUserWithValidCredentialsAndUserNotFound() throws Exception {
 		User newUser = new User("tester1@skillstorm.com","Tester","One",LocalDate.of(2000, 1, 28));
 		
@@ -191,7 +192,7 @@ public class UserControllerTest {
 	}
 	
 	@Test
-	@DisplayName("updateUser() - Invalid Credentials, User Not Found") //Service method returns true
+	@DisplayName("updateUser() - Invalid Credentials, User Not Found") //Service method returns false
 	public void testUpdateUserWithInvalidCredentialsAndUserNotFound() throws Exception {
 		User newUser = new User("tester1@skillstorm.com","Tester","One",LocalDate.of(2000, 1, 28));
 		
@@ -204,4 +205,53 @@ public class UserControllerTest {
 		verify(userService, times(0)).updateUser(any());
 	}
 	
+	@Test
+	@WithMockUser
+	@DisplayName("deleteUser() - Valid Credentials, User Found")
+	public void testDeleteUserWithValidCredentialsAndUserFound() throws Exception {
+		String username = "jtester@skillstorm.com";
+		Mockito.when(userService.deleteUser(any())).thenReturn(true);
+		mockMvc.perform(delete("/users/" + username)).andExpect(status().isOk())
+			   .andExpect(content().string(mapper.writeValueAsString(true)));
+		verify(userService, times(1)).deleteUser(any());
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("deleteUser() - Valid Credentials, User Not Found")
+	public void testDeleteUserWithValidCredentialsAndUserNotFound() throws Exception {
+		String username = "jtester@skillstorm.com";
+		Mockito.when(userService.deleteUser(any())).thenReturn(false);
+		mockMvc.perform(delete("/users/" + username)).andExpect(status().isBadRequest())
+			   .andExpect(content().string(mapper.writeValueAsString(false)));
+		verify(userService, times(1)).deleteUser(any());
+	}
+	
+	@Test
+	@DisplayName("deleteUser() - Invalid Credentials, User Found")
+	public void testDeleteUserWithInvalidCredentialsAndUserFound() throws Exception {
+		String username = "jtester@skillstorm.com";
+		
+		Mockito.when(userService.deleteUser(any())).thenReturn(true);
+		
+		mockMvc.perform(delete("/users")
+			   .with(SecurityMockMvcRequestPostProcessors.httpBasic(username, "nice")))
+			   .andExpect(status().isUnauthorized());
+		
+		verify(userService, times(0)).deleteUser(any());
+	}
+	
+	@Test
+	@DisplayName("deleteUser() - Invalid Credentials, User Not Found")
+	public void testDeleteUserWithInvalidCredentialsAndUserNotFound() throws Exception {
+		String username = "jtester@skillstorm.com";
+		
+		Mockito.when(userService.deleteUser(any())).thenReturn(false);
+		
+		mockMvc.perform(delete("/users")
+			   .with(SecurityMockMvcRequestPostProcessors.httpBasic(username, "nice")))
+			   .andExpect(status().isUnauthorized());
+		
+		verify(userService, times(0)).deleteUser(any());
+	}
 }

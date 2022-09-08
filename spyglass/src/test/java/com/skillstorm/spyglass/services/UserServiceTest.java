@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.skillstorm.spyglass.exceptions.UserNotFoundException;
 import com.skillstorm.spyglass.models.Goal;
@@ -24,6 +25,7 @@ import com.skillstorm.spyglass.models.User;
 import com.skillstorm.spyglass.repositories.UserRepository;
 
 @SpringBootTest
+@ActiveProfiles("dev")
 public class UserServiceTest {
 	@InjectMocks //Injects fake dependencies - This is what you should be testing in this file
 	UserServiceImplementation userService;

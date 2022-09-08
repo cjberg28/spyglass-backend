@@ -110,24 +110,18 @@ public class GoalControllerTest {
 		verify(goalService, times(1)).findByUser(any());
 	}
 	
+	//This test fails for some reason, as the assertion that the exception is thrown fails.
 	@Test
 	@WithMockUser
 	@DisplayName("findByUser() - Valid Credentials, User Not Found")
 	public void testFindByUserWithValidCredentialsAndUserNotFound() throws Exception {
+		Mockito.when(goalService.findByUser(any())).thenThrow(new GoalNotFoundException());
 		
 		assertThrows(GoalNotFoundException.class, () -> {
-			Mockito.when(goalService.findByUser(any())).thenThrow(new GoalNotFoundException());
-			
 			mockMvc.perform(MockMvcRequestBuilders.get("/goals/user/jtester@skillstorm.com"));
-			
-			verify(goalService, times(1)).findByUser(any());
 		});
 		
-//		Mockito.when(goalService.findByUser(any())).thenThrow(new GoalNotFoundException());
-//		
-//		mockMvc.perform(MockMvcRequestBuilders.get("/goals/user/jtester@skillstorm.com"));
-		
-//		verify(goalService, times(1)).findByUser(any());
+		verify(goalService, times(1)).findByUser(any());
 	}
 	
 	@Test
@@ -173,20 +167,21 @@ public class GoalControllerTest {
 		verify(goalService, times(1)).findById(anyInt());
 	}
 	
+	//This test fails for some reason, as the assertion that the exception is thrown fails.
 	@Test
 	@WithMockUser
 	@DisplayName("findById() - Valid Credentials, Goal Not Found")
 	public void testFindByIdWithValidCredentialsAndGoalNotFound() throws Exception {
+		int id = 1;
+		
+		//Don't use any() when service methods are expecting primitives, it gives NullPointerExceptions.
+		Mockito.when(goalService.findById(anyInt())).thenThrow(new GoalNotFoundException());
+		
 		assertThrows(GoalNotFoundException.class, () -> {
-			int id = 1;
-			
-			//Don't use any() when service methods are expecting primitives, it gives NullPointerExceptions.
-			Mockito.when(goalService.findById(anyInt())).thenThrow(new GoalNotFoundException());
-			
 			mockMvc.perform(MockMvcRequestBuilders.get("/goals/" + id));
-			
-			verify(goalService, times(1)).findById(anyInt());
 		});
+		
+		verify(goalService, times(1)).findById(anyInt());
 	}
 	
 	@Test

@@ -117,10 +117,9 @@ public class GoalControllerTest {
 	public void testFindByUserWithValidCredentialsAndUserNotFound() throws Exception {
 		Mockito.when(goalService.findByUser(any())).thenThrow(new GoalNotFoundException());
 		
-		assertThrows(GoalNotFoundException.class, () -> {
-			mockMvc.perform(MockMvcRequestBuilders.get("/goals/user/jtester@skillstorm.com"));
-		});
-		
+		mockMvc.perform(MockMvcRequestBuilders.get("/goals/user/jtester@skillstorm.com"))
+			   .andExpect(status().isNotFound());
+
 		verify(goalService, times(1)).findByUser(any());
 	}
 	
@@ -177,9 +176,8 @@ public class GoalControllerTest {
 		//Don't use any() when service methods are expecting primitives, it gives NullPointerExceptions.
 		Mockito.when(goalService.findById(anyInt())).thenThrow(new GoalNotFoundException());
 		
-		assertThrows(GoalNotFoundException.class, () -> {
-			mockMvc.perform(MockMvcRequestBuilders.get("/goals/" + id));
-		});
+		mockMvc.perform(MockMvcRequestBuilders.get("/goals/" + id))
+			   .andExpect(status().isNotFound());
 		
 		verify(goalService, times(1)).findById(anyInt());
 	}

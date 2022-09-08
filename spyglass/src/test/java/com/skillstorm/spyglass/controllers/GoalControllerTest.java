@@ -5,6 +5,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -213,5 +216,147 @@ public class GoalControllerTest {
 			   .andExpect(status().isUnauthorized());
 		
 		verify(goalService, times(0)).findById(anyInt());
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("createGoal() - Valid Credentials")
+	public void testCreateGoalWithValidCredentials() throws Exception {
+		Goal oldGoal = new Goal(0,"Test Goal 1", "Test Desc", "example.com/image", LocalDate.of(2052, 1, 1), 100.0f, 0.0f);
+		Goal newGoal = new Goal(1,"Test Goal 1", "Test Desc", "example.com/image", LocalDate.of(2052, 1, 1), 100.0f, 0.0f);
+		
+		Mockito.when(goalService.createGoal(any())).thenReturn(newGoal);
+		
+		mockMvc.perform(post("/goals").content(mapper.writeValueAsBytes(oldGoal)).contentType("application/json"))
+			   .andExpect(status().isCreated())
+			   .andExpect(content().string(mapper.writeValueAsString(newGoal)));
+		
+		verify(goalService, times(1)).createGoal(any());
+	}
+	
+	@Test
+	@DisplayName("createGoal() - Invalid Credentials")
+	public void testCreateGoalWithInvalidCredentials() throws Exception {
+		Goal oldGoal = new Goal(0,"Test Goal 1", "Test Desc", "example.com/image", LocalDate.of(2052, 1, 1), 100.0f, 0.0f);
+		Goal newGoal = new Goal(1,"Test Goal 1", "Test Desc", "example.com/image", LocalDate.of(2052, 1, 1), 100.0f, 0.0f);
+		
+		Mockito.when(goalService.createGoal(any())).thenReturn(newGoal);
+		
+		mockMvc.perform(post("/goals").content(mapper.writeValueAsBytes(oldGoal)).contentType("application/json"))
+			   .andExpect(status().isUnauthorized());
+		
+		verify(goalService, times(0)).createGoal(any());
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("updateGoal() - Valid Credentials, Goal Found")
+	public void testUpdateGoalWithValidCredentialsAndGoalFound() throws Exception {
+		Goal mockGoal = new Goal(1,"Test Goal 1", "Test Desc", "example.com/image", LocalDate.of(2052, 1, 1), 100.0f, 0.0f);
+		
+		Mockito.when(goalService.updateGoal(any())).thenReturn(true);
+		
+		mockMvc.perform(put("/goals").content(mapper.writeValueAsBytes(mockGoal)).contentType("application/json"))
+			   .andExpect(status().isOk())
+			   .andExpect(content().string(mapper.writeValueAsString(true)));
+		
+		verify(goalService, times(1)).updateGoal(any());
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("updateGoal() - Valid Credentials, Goal Not Found")
+	public void testUpdateGoalWithValidCredentialsAndGoalNotFound() throws Exception {
+		Goal mockGoal = new Goal(1,"Test Goal 1", "Test Desc", "example.com/image", LocalDate.of(2052, 1, 1), 100.0f, 0.0f);
+		
+		Mockito.when(goalService.updateGoal(any())).thenReturn(false);
+		
+		mockMvc.perform(put("/goals").content(mapper.writeValueAsBytes(mockGoal)).contentType("application/json"))
+			   .andExpect(status().isBadRequest())
+			   .andExpect(content().string(mapper.writeValueAsString(false)));
+		
+		verify(goalService, times(1)).updateGoal(any());
+	}
+	
+	@Test
+	@DisplayName("updateGoal() - Invalid Credentials, Goal Found")
+	public void testUpdateGoalWithInvalidCredentialsAndGoalFound() throws Exception {
+		Goal mockGoal = new Goal(1,"Test Goal 1", "Test Desc", "example.com/image", LocalDate.of(2052, 1, 1), 100.0f, 0.0f);
+		
+		Mockito.when(goalService.updateGoal(any())).thenReturn(true);
+		
+		mockMvc.perform(put("/goals").content(mapper.writeValueAsBytes(mockGoal)).contentType("application/json"))
+			   .andExpect(status().isUnauthorized());
+		
+		verify(goalService, times(0)).updateGoal(any());
+	}
+	
+	@Test
+	@DisplayName("updateGoal() - Invalid Credentials, Goal Not Found")
+	public void testUpdateGoalWithInvalidCredentialsAndGoalNotFound() throws Exception {
+		Goal mockGoal = new Goal(1,"Test Goal 1", "Test Desc", "example.com/image", LocalDate.of(2052, 1, 1), 100.0f, 0.0f);
+		
+		Mockito.when(goalService.updateGoal(any())).thenReturn(false);
+		
+		mockMvc.perform(put("/goals").content(mapper.writeValueAsBytes(mockGoal)).contentType("application/json"))
+			   .andExpect(status().isUnauthorized());
+		
+		verify(goalService, times(0)).updateGoal(any());
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("deleteGoal() - Valid Credentials, Goal Found")
+	public void testDeleteGoalWithValidCredentialsAndGoalFound() throws Exception {
+		int id = 1;
+		
+		Mockito.when(goalService.deleteGoal(anyInt())).thenReturn(true);
+		
+		mockMvc.perform(delete("/goals/" + id))
+			   .andExpect(status().isOk())
+			   .andExpect(content().string(mapper.writeValueAsString(true)));
+		
+		verify(goalService, times(1)).deleteGoal(anyInt());
+	}
+	
+	@Test
+	@WithMockUser
+	@DisplayName("deleteGoal() - Valid Credentials, Goal Not Found")
+	public void testDeleteGoalWithValidCredentialsAndGoalNotFound() throws Exception {
+		int id = 1;
+		
+		Mockito.when(goalService.deleteGoal(anyInt())).thenReturn(false);
+		
+		mockMvc.perform(delete("/goals/" + id))
+			   .andExpect(status().isBadRequest())
+			   .andExpect(content().string(mapper.writeValueAsString(false)));
+		
+		verify(goalService, times(1)).deleteGoal(anyInt());
+	}
+	
+	@Test
+	@DisplayName("deleteGoal() - Invalid Credentials, Goal Found")
+	public void testDeleteGoalWithInvalidCredentialsAndGoalFound() throws Exception {
+		int id = 1;
+		
+		Mockito.when(goalService.deleteGoal(anyInt())).thenReturn(true);
+		
+		mockMvc.perform(delete("/goals/" + id))
+			   .andExpect(status().isUnauthorized());
+		
+		verify(goalService, times(0)).deleteGoal(anyInt());
+	}
+	
+	@Test
+	@DisplayName("deleteGoal() - Invalid Credentials, Goal Not Found")
+	public void testDeleteGoalWithInvalidCredentialsAndGoalNotFound() throws Exception {
+		int id = 1;
+		
+		Mockito.when(goalService.deleteGoal(anyInt())).thenReturn(false);
+		
+		mockMvc.perform(delete("/goals/" + id))
+			   .andExpect(status().isUnauthorized());
+		
+		verify(goalService, times(0)).deleteGoal(anyInt());
 	}
 }
